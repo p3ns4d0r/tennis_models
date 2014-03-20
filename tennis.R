@@ -21,13 +21,13 @@ fsp         = data$firstServePercentage		#First Serve Percentage
 aces        = data$Aces				#Number of Aces in a match
 ue          = data$unforcedErrors 		#Unforced Erros 
 fspw        = data$fspw 			#First Serve Win Percentage
-sspw        = data$sspw;sspw			#Second Serve Win Percentage
+sspw        = data$sspw				#Second Serve Win Percentage
 winners     = data$winners			#Winners (is a discrete count of winners in a tennis match)
-bpcp        = data$bpcp ;bpcp			# Break Point  Conversion Percentage
+bpcp        = data$bpcp 			# Break Point  Conversion Percentage
 fset        = data$fset				#First Set: Bernoulli random variable if player won or lost first set
-match       = data$match ; won			#Bernoulli if player won or lost match
-surface.raw = data$Surface; surface.raw		#surface.raw is a string, either 'Hard', 'Clay', or 'Grass'
-numSets     = data$numSets ;numSets			#Number of Sets
+match       = data$match 			#Bernoulli if player won or lost match
+surface.raw = data$Surface			#surface.raw is a string, either 'Hard', 'Clay', or 'Grass'
+numSets     = data$numSets			#Number of Sets
 
 
 #Create category variable for different surfaces
@@ -35,7 +35,9 @@ numSets     = data$numSets ;numSets			#Number of Sets
 
 length(surface.raw)
 surface = rep(0,210)
-surface[which(surface.raw == 'Grass')] = 1; surface[which(surface.raw == 'Clay')] = 2; surface[which(surface.raw =='Hard')] = 3; surface
+surface[which(surface.raw == 'Grass')] = 1
+surface[which(surface.raw == 'Clay')] = 2
+surface[which(surface.raw =='Hard')] = 3
 
 ### Averages ####
 #Here we're taking "count" data and dividing it by the number of sets in the match to 
@@ -43,17 +45,15 @@ surface[which(surface.raw == 'Grass')] = 1; surface[which(surface.raw == 'Clay')
 # playing so many games) just as a player who is handily winning a three set match against a weaker opponnet
 #. This metric probably isn't perfect but will help with that issue. 
 
-avgAces = aces/numSets; avgAces			#Average Number of Aces
-avgWinners = winners/numSets ; avgWinners	#Average Number of Winners
-avgUe = ue/numSets ; 				#Average Number of Unforced Errors
+avgAces = aces/numSets			#Average Number of Aces
+avgWinners = winners/numSets  	#Average Number of Winners
+avgUe = ue/numSets 			#Average Number of Unforced Errors
 
 
 
-#
-##
-### Simple Logistic Regression ####
-##
-#
+
+### Simple Logistic Regression 
+
 
  #Try a simple 1 variable it for each player
  #This methodology is admittedly imperfect since we're only checking p-values and not much else (AIC can only compare two models that are related, but comparing AIC across players seems implausable).
@@ -62,14 +62,15 @@ avgUe = ue/numSets ; 				#Average Number of Unforced Errors
  #We switched variables in manually
 for (i in 1:length(players)){
 	if (i ==1){ print ("***Surface****")}
-	test.glm = glm(match[which (player == players[i])]~surface[which (player == players[i])], family = 	"binomial");print (players[i]); print ("P-Value:" ); print(summary(test.glm)$coefficients[2,4]) ; 
+	test.glm = glm(match[which (player == players[i])]~surface[which (player == players[i])],
+		family = "binomial")
+	print (players[i])
+	print ("P-Value:" )
+	print(summary(test.glm)$coefficients[2,4]) ; 
 }
 
-#
-##
+
 ### Full Models ###
-##
-#
 
 #Murray GLM
 
@@ -82,7 +83,13 @@ classification.error = (3 + 5)/ 57
 
 #Federer GLM
 
-test.glm = glm(match[which (player == "Federer")]~avgAces[which (player == "Federer")] + avgWinners[which (player == "Federer")] + fsp[which (player == "Federer")] + avgUe[which (player == "Federer")] + fset[which (player == "Federer")] +bpcp[which (player == "Federer")] + fspw[which(player == "Federer")]  + numSets[which (player == "Federer")]  , family = "binomial");summary(test.glm)
+test.glm = glm(match[which (player == "Federer")]~avgAces[which (player == "Federer")]
+	+ avgWinners[which (player == "Federer")] + fsp[which (player == "Federer")]
+	+ avgUe[which (player == "Federer")] + fset[which (player == "Federer")]
+	+ bpcp[which (player == "Federer")] + fspw[which(player == "Federer")] 
+	+ numSets[which (player == "Federer")]  , family = "binomial")
+	
+summary(test.glm)
 
 length(which(player == "Federer"))
 which(test.glm$fitted.values < .5) + 42 
@@ -90,32 +97,40 @@ which( player == "Federer" & match == 0)
 
 #Nadal GLM
 
-test.glm = glm(match[which (player == "Nadal")]~avgAces[which (player == "Nadal")] + avgWinners[which (player == "Nadal")] + fsp[which (player == "Nadal")] + avgUe[which (player == "Nadal")] + fset[which (player == "Nadal")] +bpcp[which (player == "Nadal")] + fspw[which(player == "Nadal")]  , family = "binomial");summary(test.glm)
-
+test.glm = glm(match[which (player == "Nadal")]~avgAces[which (player == "Nadal")] +
+	avgWinners[which (player == "Nadal")] + fsp[which (player == "Nadal")] +
+		avgUe[which (player == "Nadal")] + fset[which (player == "Nadal")] +
+		bpcp[which (player == "Nadal")] + fspw[which(player == "Nadal")],
+		family = "binomial");summary(test.glm)
+		
 which(player == "Nadal")
 which(test.glm$fitted.values < .5)
 which(player == "Nadal" & match == 0)
 
 #Djokovic GLM
 
-test.glm = glm(match[which (player == "Djokovic")]~avgAces[which (player == "Djokovic")] + avgWinners[which (player == "Djokovic")] + fsp[which (player == "Djokovic")] + avgUe[which (player == "Djokovic")] + fset[which (player == "Djokovic")] +bpcp[which (player == "Djokovic")] + fspw[which(player == "Djokovic")]  , family = "binomial");summary(test.glm)
+test.glm = glm(match[which (player == "Djokovic")]~avgAces[which (player == "Djokovic")] 
+	+ avgWinners[which (player == "Djokovic")] + fsp[which (player == "Djokovic")] + 
+	avgUe[which (player == "Djokovic")] + fset[which (player == "Djokovic")] +
+	bpcp[which (player == "Djokovic")] + fspw[which(player == "Djokovic")] , family = "binomial")
+
+summary(test.glm)
 
 which(player == "Djokovic")
 which(test.glm$fitted.values < .5) +94
 which(player == "Djokovic" & match == 0)
 
-#
-##
+
 ### Reduced Models ####
-##
-#
 
 #Note: The procedure for obtaining these reduced models was checking the Akaike Information Criterion and 
 #and attempting to minimize it by removing each variable once and watching it's effect and iterating. 
-# 
-#Murray GLM Reduced
+# I'm pretty sure there's a way better, less ad-hoc way to achieve this.
 
-test.glm = glm(match[which (player == "Murray")]~avgUe[which (player == "Murray")] + fset[which (player == "Murray")] +bpcp[which (player == "Murray")] + fspw[which(player == "Murray")] , family = "binomial");summary(test.glm)
+#Murray GLM Reduced
+test.glm = glm(match[which (player == "Murray")]~avgUe[which (player == "Murray")] +
+	fset[which (player == "Murray")] +bpcp[which (player == "Murray")] +
+	fspw[which(player == "Murray")] , family = "binomial");summary(test.glm)
 
 #Classification Error
 which(player == "Murray")
@@ -127,7 +142,12 @@ which( player == "Murray" & match == 0)
 
 #Federer GLM Reduced
 
-test.glm = glm(match[which (player == "Federer")]~avgAces[which (player == "Federer")] + avgWinners[which (player == "Federer")] + avgUe[which (player == "Federer")] + fset[which (player == "Federer")] +bpcp[which (player == "Federer")] + fspw[which(player == "Federer")]  , family = "binomial");summary(test.glm)
+test.glm = glm(match[which (player == "Federer")]~avgAces[which (player == "Federer")]
+	+ avgWinners[which (player == "Federer")] + avgUe[which (player == "Federer")] 
+	+ fset[which (player == "Federer")] +bpcp[which (player == "Federer")] 
+	+ fspw[which(player == "Federer")]  , family = "binomial")
+
+summary(test.glm)
 
 #Classification Error
 length(which(player == "Federer"))
@@ -140,7 +160,10 @@ which( player == "Federer" & match == 0)
 
 #Nadal GLM Reduced
 
-test.glm = glm(match[which (player == "Nadal")]~   fset[which (player == "Nadal")] +bpcp[which (player == "Nadal")] + fspw[which(player == "Nadal")]  , family = "binomial");summary(test.glm)
+test.glm = glm(match[which (player == "Nadal")]~   fset[which (player == "Nadal")] +
+	bpcp[which (player == "Nadal")] + fspw[which(player == "Nadal")]  , family = "binomial")
+
+summary(test.glm)
 
 #Classification Error
 which(player == "Nadal")
@@ -153,7 +176,10 @@ which(player == "Nadal" & match == 0)
 
 #Djokovic GLM Reduced
 
-test.glm = glm(match[which (player == "Djokovic")]~ avgUe[which (player == "Djokovic")] + fset[which (player == "Djokovic")] + fspw[which(player == "Djokovic")]  , family = "binomial");summary(test.glm)
+test.glm = glm(match[which (player == "Djokovic")]~ avgUe[which (player == "Djokovic")] + 
+	fset[which (player == "Djokovic")] + fspw[which(player == "Djokovic")], family = "binomial")
+
+summary(test.glm)
 
 # Check Classification Error
 which(player == "Djokovic")	#It shifts over the indices so we're just moving them back

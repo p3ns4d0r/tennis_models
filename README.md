@@ -5,7 +5,7 @@ tennis_models
 
 
 A fun project to try to model Roger Federer, Andy Murray, Novak Djokovic, and Rafael Nadal's playing styles with 
-data from Gambling Websites based on the past five years of tennis majors. We basically did stepwise logistic
+data scraped off of european gambling websites  on the past five years of tennis majors. We basically did stepwise logistic
 regression without knowing it existed, looking at Aikake's Information Criterion and Likelihood Ratios to tune the models.
 
 Some interesting findings:

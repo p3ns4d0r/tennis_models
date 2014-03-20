@@ -15,4 +15,3 @@ Some interesting findings:
 - We couldn't find any combination of variables that could  classify Murray's wins and losses better than 84%, probably attributble to his variable, defensive style which is not very uniform (he can win in a lot of different ways, but no subset of them is great at modeling his performance)(probably a good candidate for dimensionality reduction). He is also a very emotional tennis player prone to the passionate fits of rage and joy on the court. He is unpredictable, emotional, and awesome. We love Andy.
 
 
-Completed with Malik Mubeen (2013)

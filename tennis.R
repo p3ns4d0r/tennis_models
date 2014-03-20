@@ -16,15 +16,15 @@ qplot(unforcedErrors, Aces, data = data, geom = "point", color = player, size = 
 #Rafael Nadal, Roger Federer, Novak Djokovic, and Andy Murray.
 
 
-player      = data$player					#Player Name
+player      = data$player			#Player Name
 fsp         = data$firstServePercentage		#First Serve Percentage
-aces        = data$Aces						#Number of Aces in a match
-ue          = data$unforcedErrors 			#Unforced Erros 
-fspw        = data$fspw 						#First Serve Win Percentage
-sspw        = data$sspw;sspw				#Second Serve Win Percentage
-winners     = data$winners				#Winners (is a discrete count of winners in a tennis match)
-bpcp        = data$bpcp ;bpcp				# Break Point  Conversion Percentage
-fset        = data$fset							#First Set: Bernoulli random variable if player won or lost first set
+aces        = data$Aces				#Number of Aces in a match
+ue          = data$unforcedErrors 		#Unforced Erros 
+fspw        = data$fspw 			#First Serve Win Percentage
+sspw        = data$sspw;sspw			#Second Serve Win Percentage
+winners     = data$winners			#Winners (is a discrete count of winners in a tennis match)
+bpcp        = data$bpcp ;bpcp			# Break Point  Conversion Percentage
+fset        = data$fset				#First Set: Bernoulli random variable if player won or lost first set
 match       = data$match ; won			#Bernoulli if player won or lost match
 surface.raw = data$Surface; surface.raw		#surface.raw is a string, either 'Hard', 'Clay', or 'Grass'
 numSets     = data$numSets ;numSets			#Number of Sets
@@ -43,9 +43,9 @@ surface[which(surface.raw == 'Grass')] = 1; surface[which(surface.raw == 'Clay')
 # playing so many games) just as a player who is handily winning a three set match against a weaker opponnet
 #. This metric probably isn't perfect but will help with that issue. 
 
-avgAces = aces/numSets; avgAces				#Average Number of Aces
+avgAces = aces/numSets; avgAces			#Average Number of Aces
 avgWinners = winners/numSets ; avgWinners	#Average Number of Winners
-avgUe = ue/numSets ; 									#Average Number of Unforced Errors
+avgUe = ue/numSets ; 				#Average Number of Unforced Errors
 
 
 
@@ -156,7 +156,7 @@ which(player == "Nadal" & match == 0)
 test.glm = glm(match[which (player == "Djokovic")]~ avgUe[which (player == "Djokovic")] + fset[which (player == "Djokovic")] + fspw[which(player == "Djokovic")]  , family = "binomial");summary(test.glm)
 
 # Check Classification Error
-which(player == "Djokovic")					#It shifts over the indices so we're just moving them back
+which(player == "Djokovic")	#It shifts over the indices so we're just moving them back
 which(test.glm$fitted.values < .5) +94
 which(player == "Djokovic" & match == 0)
 

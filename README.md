@@ -1,7 +1,7 @@
 tennis_models
 =============
 
-![roger](https://raw.github.com/kingishb/tennis_models/roger-federer-1-sized.jpg)
+![roger](roger-federer-1-sized.jpg)
 A fun project to try to model Roger Federer, Andy Murray, Novak Djokovic, and Rafael Nadal's playing styles with 
 data from Gambling Websites based on the past five years of tennis majors. We basically did stepwise logistic
 regression without knowing it existed, looking at Aikake's Information Criterion and Likelihood Ratios to tune the models.

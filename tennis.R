@@ -56,7 +56,8 @@ avgUe = ue/numSets 			#Average Number of Unforced Errors
 
 
  #Try a simple 1 variable it for each player
- #This methodology is admittedly imperfect since we're only checking p-values and not much else (AIC can only compare two models that are related, but comparing AIC across players seems implausable).
+ #This methodology is admittedly imperfect since we're only checking p-values and not much else
+ #(AIC can only compare two models that are related, but comparing AIC across players seems implausable).
  #However, we really just want to see which variables are reasonably correlated with winning.
  players = c("Djokovic", "Federer", "Nadal", "Murray")
  #We switched variables in manually
@@ -74,7 +75,13 @@ for (i in 1:length(players)){
 
 #Murray GLM
 
-test.glm = glm(match[which (player == "Murray")]~avgAces[which (player == "Murray")] + avgWinners[which (player == "Murray")] + fsp[which (player == "Murray")] + avgUe[which (player == "Murray")] + fset[which (player == "Murray")] +bpcp[which (player == "Murray")] + fspw[which(player == "Murray")]  , family = "binomial");summary(test.glm)
+test.glm = glm(match[which (player == "Murray")]~avgAces[which (player == "Murray")] + 
+		avgWinners[which (player == "Murray")] + fsp[which (player == "Murray")] + 
+		avgUe[which (player == "Murray")] + fset[which (player == "Murray")] +
+		bpcp[which (player == "Murray")] + fspw[which(player == "Murray")],
+		family = "binomial")
+
+summary(test.glm)
 length(which(player == "Murray"))
 which(test.glm$fitted.values < .5) + 153 
 which( player == "Murray" & match == 0)
